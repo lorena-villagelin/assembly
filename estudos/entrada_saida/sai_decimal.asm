@@ -4,7 +4,7 @@ TITLE saida decimal
 .CODE
     MAIN PROC
 
-        MOV AX, 10
+        MOV AX, 12345
 
         XOR CX, CX
         MOV BX, 10

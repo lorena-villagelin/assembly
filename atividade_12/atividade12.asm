@@ -34,21 +34,21 @@ MAIN PROC
                   LEA   DI, v_origem      ;aponta para o vetor onde será armazenado
                   CALL  p_leitura         ;chama o procedimento de leitura
 
-                  MOV   AH, 09H
-                  LEA   DX, digitada
-                  INT   21H
-                  XOR   SI, SI            ;zera SI
-                  XOR   CX, CX            ;zera CX
-                  MOV   CL, tamanho       ;passa o tamanho da string para CL
-                  LEA   SI, v_origem      ;aponta para o vetor que será impresso
-                  CALL  p_impressao       ;chama o procedimento de impressão
-
     ;2. copie este sting em outro
                   LEA   SI, v_origem      ;aponta para a string que será copiada
                   LEA   DI, v_destino     ;aponta para onde a string será colada
                   XOR   CX, CX
                   MOV   CL, tamanho       ;passa para CL o tamanho da string que será copiada
                   CALL  p_copia           ;chama o procedimento de copia
+
+                  MOV   AH, 09H
+                  LEA   DX, digitada
+                  INT   21H
+                  XOR   SI, SI            ;zera SI
+                  XOR   CX, CX            ;zera CX
+                  MOV   CL, tamanho       ;passa o tamanho da string para CL
+                  LEA   SI, v_destino      ;aponta para o vetor que será impresso
+                  CALL  p_impressao       ;chama o procedimento de impressão
 
     ;3. compara o string lido com um já armazenado na memória e diga se são iguais ou não.
                   MOV   AH, 09H
@@ -115,7 +115,7 @@ p_copia PROC
                   PUSH  AX
                   PUSH  DX
                   CLD                     ;zera DF
-                  MOVSB                   ;copia o string
+                  REP MOVSB                   ;copia o string
                   POP   DX
                   POP   AX
                   RET
