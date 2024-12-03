@@ -13,10 +13,42 @@ title exercicio4
         mov ds, ax
         mov es, ax
 
-        xor cx, cx 
-        mov cl, tamanho
-        lea si, vetor
-        call move
+
+        cld
+        xor si, si
+        xor di, di 
+        add di, 3
+        lea si, vetor 
+        lea di, vetor
+        desloca:
+            lodsb
+            stosb
+            inc si 
+            inc di
+            loop desloca
+
+
+            
+
+        ; lodsb ;al=5
+        ; xor di, di ;di=0
+        ; xor bx, bx ;bx=0
+        ; mov bl, al  ;bl=5
+        ; lea di, vetor
+        ; xor cx, cx  
+        ; mov cl, tamanho
+        
+        ; repe movsb
+        ; mov vetor[di], bl
+
+        ; xor cx, cx
+        ; mov cl, tamanho
+        ; lea si, vetor+4 ;aponta para 5
+        ; call move
+
+        ; xor cx, cx 
+        ; mov cl, tamanho
+        ; lea si, rotacao
 
         xor cx, cx
         mov cl, tamanho
@@ -27,18 +59,42 @@ title exercicio4
         int 21h
     main endp
 
-    move proc
-        cld
-        lodsb
-        mov bl, al
-        xor di, di 
+    ; move proc
+    ;     push ax
+    ;     push di
+    ;     push dx
+    ;     std
+    ;     lodsb ;al=5
+    ;     xor bx, bx ;bx=0
+    ;     mov bl, al ;bl=5
+    ;     xor di, di ;di=0
+    ;     mov dx, cx
+    ;     mov vetor[di], bl ; 5, 2, 3, 4, 5  
+    ;     gira:
+            
+    ;         loop gira
 
-        rotacao:
-            inc di
-            mov vetor[di], al
-            loop rotacao
-        ret
-    move endp
+
+    ;     pop dx
+    ;     pop di
+    ;     pop ax 
+    ;     ret
+    ; move endp
+
+    ; rotacao proc
+    ;     push ax
+    ;     push di
+    ;     cld
+    ;     xor di, di
+    ;     rodando:
+    ;         lodsb
+    ;         add di, 2
+    ;         mov vetor[di],  al
+    ;         loop rodando
+    ;     pop di
+    ;     pop ax
+    ;     ret 
+    ; rotacao endp
 
     impressao proc 
         push ax

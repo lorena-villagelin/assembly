@@ -29,8 +29,8 @@ endm
              db 7, 8, 9
     s_original db 10, 13, 'matriz original: $'
     s_transposta db 10, 13, 'matriz transposta: $'
-    linha db 3
-    total db 9
+    linha dw 3
+    total dw 9
 .code
     main proc 
         mov ax, @data 
@@ -42,19 +42,16 @@ endm
         int 21h
         pula
 
-        xor cx, cx 
-        mov cl, total
+        mov cx, total
         lea si, original
         lea di, matriz
         call troca
 
-        xor cx, cx
-        mov cl, total
+        mov cx, total
         lea si, matriz
         call imprime
 
-        xor cx, cx 
-        mov cl, linha
+        mov cx, linha
         lea si, original
         call transpondo   
 
@@ -66,8 +63,7 @@ endm
         int 21h
         pula
 
-        xor cx, cx 
-        mov cl, total 
+        mov cx, total 
         lea si, matriz
         call imprime
 
@@ -88,21 +84,22 @@ endm
     imprime proc
         push ax
         push dx
-        cld
+        cld 
         mov ah, 02h
-        xor bx, bx
+        xor bx,bx
         impressao:
             lodsb
             mov dl, al
             or dl, 30h
             int 21h
             espaco
-            inc bx
-            cmp bl, linha
+            inc bl
+            cmp bx, linha
             je pulando
             jmp segue
             pulando:
                 pula
+                xor bl, bl
             segue:
                 loop impressao
         pop ax
@@ -114,17 +111,32 @@ endm
         push ax 
         xor si, si
         xor bx, bx
-        mov dx, cx
-        transp:
-            inc bx
-            mov al, matriz[si][bx]
-            add si, dx
-            dec bx
-            xchg matriz[si], al
-            sub si, dx
-            inc bx
-            mov matriz[si][bx], al
-            loop transp 
+        mov dx, linha
+        dec dx
+        dec cx
+        volta:
+            transp:
+                inc bx 
+                mov al, matriz[si][bx] 
+                    push cx
+                    mov cx, bx
+                    soma:
+                        add si, linha
+                        loop soma
+                    mov cx, bx
+                    subtrai:
+                        dec bx
+                        loop subtrai
+                    pop cx
+                xchg matriz[si], al
+                sub si, linha 
+                inc bx 
+                mov matriz[si][bx], al
+                loop transp 
+            add si, linha
+            dec dx
+            cmp dx, 00h
+            jne volta
         pop ax 
         ret
     transpondo endp
