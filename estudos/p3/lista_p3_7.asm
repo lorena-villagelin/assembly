@@ -5,13 +5,22 @@
 title exercicio7
 .model small 
 .stack 0100h
+pula_linha macro
+    push ax
+    push dx
+        mov ah, 02h
+        mov dl, 0ah
+        int 21h
+    pop dx
+    pop ax
+endm
 .data 
     vetor db 1, 2, 3, 4, 5
     tamanho dw 5 
     original db 'vetor original: $'
     elemento db 'qual elemento deseja retirar? $'
     novo db 'novo vetor: $'
-    e db 2
+    e dw 5
 .code 
     main proc 
         mov ax, @data 
@@ -23,9 +32,32 @@ title exercicio7
         lea si, vetor
         call imprime
 
+        pula_linha
+        
+        ; xor ax, ax
+        ; mov al, e
+        ; mov cx, tamanho
+        ; lea di, vetor
+        ; lea si, vetor
+        ; call procura
+        
         mov cx, tamanho
-        lea di, vetor
-        call procura
+        mov bx, e
+        dec bx
+        sub cx, bx
+        xor si, si
+        xor ax, ax
+        mov si, e
+        tira:
+            mov al, vetor[si]
+            dec si
+            mov vetor[si], al
+            add si, 2
+            loop tira
+        mov bx, tamanho
+        dec bx
+        mov vetor[bx], 0
+
 
         mov cx, tamanho 
         lea si, vetor
@@ -49,19 +81,20 @@ title exercicio7
         pop ax
         ret
     imprime endp
-    procura proc
-        push ax
-        cld 
-        procurando:
-            scasb
-            jnz coloca
-            jmp pula 
-            coloca:
-                stosb
-                dec di
-            pula:
-                loop procurando 
-        pop ax   
-        ret            
-    procura endp
+    ; procura proc
+    ;     cld 
+    ;     procurando:
+    ;         scasb
+    ;         jnz coloca
+    ;         jmp pula 
+    ;         coloca:
+    ;             push ax 
+    ;             lodsb
+    ;             stosb
+    ;             dec di
+    ;             pop ax
+    ;         pula:
+    ;             loop procurando   
+    ;     ret            
+    ; procura endp
 end main
